@@ -1,40 +1,44 @@
-import React, { useState } from "react";
+import { lazy, Suspense } from "react";
+import {BrowserRouter as Router, Route, Routes, useLocation} from "react-router-dom";
 
 import AppHeader from "../appHeader/AppHeader";
-import RandomChar from "../randomChar/RandomChar";
-import CharList from "../charList/CharList";
-import CharInfo from "../charInfo/CharInfo";
-import ErrorBoundary from "../errorBoundary/errorBoundary";
-import ComicsList from "../comicsList/ComicsList";
+import Spinner from "../spiner/spiner";
+// import SingleCharPage from "../pages/SingleCharPage";
 
-import decoration from '../../resources/img/vision.png';
+// import { MainPages, Comics, SingleComicPage } from "../pages";
+
+const Page404 = lazy(() => import('../pages/Page404'));
+const MainPages = lazy(() => import('../pages/MainPages'));
+const ComicsPage = lazy(() => import('../pages/ComicsPage'));
+const SingleCharOrComicPage = lazy(() => import('../pages/SingleCharOrComicPage'));
+// Можна зробити клікабельними комімікси у персонажів а також якщо ми переходим на сторінку 404 зробити кнопку назад на ту де був користувач
 
 const App = () => {
-    const [selectedChar, setSelectChar] = useState(null)
-
-    const selectChar = (id) => {
-        setSelectChar(id)
-    }
+    // const location = useLocation();
+    // const content = location === '/' ? <SingleCharPage/> : <SingleComicPage/>
 
     return (
-        <div className="app">
-            <AppHeader/>
-            {/* <main>
-                <ErrorBoundary>
-                    <RandomChar/>
-                </ErrorBoundary>
-                <div className="char__content">
-                    <ErrorBoundary>
-                        <CharList selectChar={selectChar}/>
-                    </ErrorBoundary>
-                    <ErrorBoundary>
-                        <CharInfo charId={selectedChar}/>
-                    </ErrorBoundary>      
-                </div>
-                <img className="bg-decoration" src={decoration} alt="vision"/>
-            </main> */}
-            <ComicsList/>
-        </div>
+        <Router>
+            <div className="app">
+                <AppHeader/>
+                <main>
+                    <Suspense fallback={<Spinner/>}>
+                        <Routes>
+                            <Route exact path='/' element={<MainPages/>}/>
+                                
+                            <Route exact path='/comics' element={<ComicsPage/>}/>
+
+                            <Route exact path='/:charId' element={<SingleCharOrComicPage/>}/>
+
+                            <Route exact path='/comics/:comicId' element={<SingleCharOrComicPage/>}/>
+
+                            <Route exact path='*' element={<Page404/>}/>
+
+                        </Routes>
+                    </Suspense>
+                </main>
+            </div>
+        </Router>
     )
 }
 

@@ -32,7 +32,6 @@ const CharList = (props) => {
         }
 
         setCharacters(characters => [...characters, ...newChars]);
-        // setLoading(loading => false);
         setNewItemLoading(newItemLoading => false);
         setOffset(offset => offset + 9);
         setCharEnded(charEnded => ended);
@@ -46,10 +45,10 @@ const CharList = (props) => {
 
     }
 
-    const addNewCharacters = () => {
-        onRequest(offset)
-        setOffset(offset => offset + 9);
-    }
+    // const addNewCharacters = () => {
+    //     onRequest(offset)
+    //     setOffset(offset => offset + 9);
+    // }
 
 
     const charRef = useRef([]);    
@@ -93,12 +92,9 @@ const CharList = (props) => {
         )
     }
 
-
-        // const {characters, loading, error, offset, newItemLoading, charEnded} = this.state;
         const items = renderItems(characters);
         const spiner = loading && !newItemLoading ? <Spinner/> : null;
         const errorMessage = error ? <ErrorMessage/> : null;
-        // const content = !(loading || error) ? items : null;
         const styled = (loading || error) ? {'display': 'flex', 'justifyContent': 'center'} : null;
 
         return (

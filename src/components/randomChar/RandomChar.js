@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spiner/spiner';
@@ -10,9 +11,6 @@ import mjolnir from '../../resources/img/mjolnir.png';
 const RandomChar = () => {
 
     const [char, setChar] = useState({});
-    // const [loading, setLoading] = useState(true);
-    // const [error, setError] = useState(false);
-
     const {loading, error, getCharacter, clearError} = useMarvelService();
 
 
@@ -71,23 +69,22 @@ const RandomChar = () => {
 }
 
 const View = ({char}) => {
-    const {name, description, thumbnail, homepage, wiki} = char;
+    const {id, name, description, thumbnail, homepage, wiki} = char;
 
-    console.log(char);
     let style = thumbnail?.indexOf('image_not_available.jpg') > -1 ? {'objectFit': 'contain'} : null;
     
     return (
         <div className="randomchar__block">
-            <img src={thumbnail} style={style} alt="Random character" className="randomchar__img"/>
+            <img src={thumbnail} style={style} alt={name} className="randomchar__img"/>
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>
                 <p className="randomchar__descr">
-                    {description}
+                    {description?.length > 210 ? `${description?.slice(0, 210)}...` : description}
                 </p>
                 <div className="randomchar__btns">
-                    <a href={homepage} className="button button__main">
+                    <Link to={`/${id}`} className="button button__main">
                         <div className="inner">homepage</div>
-                    </a>
+                    </Link>
                     <a href={wiki} className="button button__secondary">
                         <div className="inner">Wiki</div>
                     </a>
