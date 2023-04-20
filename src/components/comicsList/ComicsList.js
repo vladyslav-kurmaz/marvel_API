@@ -31,12 +31,11 @@ const ComicsList = () => {
     const {clearError, getAllComics, process, setProcess} = useMarvelService();
 
     useEffect(() => {
-        console.log('Effect');
         onRequest(offset, true);
+        // eslint-disable-next-line
     }, [])
 
     const onRequest = (offset, initial) => {
-        console.log('onRequest');
         initial ? setNewComicsLoading(false) : setNewComicsLoading(true)
         clearError()
         getAllComics(offset)
@@ -59,7 +58,6 @@ const ComicsList = () => {
     }
 
     const renderComics = (comics) => {
-        console.log(comics);
         const comicsList = comics.map(({id, name, price, thumbnail}, i) => {
             return (
                 

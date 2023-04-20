@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet';
 
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import setContent from '../../utils/setContent';
@@ -17,6 +17,7 @@ const SingleComicPage = () => {
 
     useEffect(() => {
         charId ? updateComic(() => getCharacter(charId)) : updateComic(() => getComics(comicId))
+        // eslint-disable-next-line
     }, [comicId, charId])
 
     const updateComic = (fc) => {

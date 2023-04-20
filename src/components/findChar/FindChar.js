@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import useMarvelService from '../../services/MarvelService';
 import SearchCharList from '../SearchCharList/SearchCharList';
 
@@ -41,7 +41,7 @@ const FindChar = () => {
                 onChange={onChangeTemp} 
                 placeholder="Find character by name"
                 onClick={handleClick}
-                // onBlur={() => setData([])}
+                onBlur={() => setData([])}
                 />
 
             {temp && data?.length === 0 && !loading ? <div className='find__error'>No character found for this query</div> : null}

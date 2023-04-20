@@ -22,6 +22,8 @@ const RandomChar = () => {
         // return () => {
         //     clearInterval(timerId);
         // }
+
+        // eslint-disable-next-line
     }, [])
 
     const onCharLoaded = (char) => {
@@ -61,7 +63,7 @@ const RandomChar = () => {
 }
 
 const View = ({data}) => {
-    const {id, name, description, thumbnail, homepage, wiki} = data;
+    const {id, name, description, thumbnail, wiki} = data;
 
     let style = thumbnail?.indexOf('image_not_available.jpg') > -1 ? {'objectFit': 'contain'} : null;
     

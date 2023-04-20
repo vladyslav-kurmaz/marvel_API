@@ -11,10 +11,11 @@ const CharInfo = (props) => {
     const [char, setChar] = useState(null);
 
 
-    const {error, loading, getCharacter, clearError, process, setProcess} = useMarvelService();
+    const {getCharacter, clearError, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         updateChar();
+        // eslint-disable-next-line
     }, [props.charId])
 
     const updateChar = () => {
@@ -44,7 +45,7 @@ const CharInfo = (props) => {
 }
 
 const View = ({data}) => {
-    const {id, name, thumbnail, description, wiki, homepage, comics} = data;
+    const {id, name, thumbnail, description, wiki, comics} = data;
 
     
     let style = thumbnail.indexOf('image_not_available.jpg') > -1 ? {'objectFit': 'unset'} : {'objectFit': 'cover'};
