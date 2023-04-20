@@ -1,56 +1,18 @@
-import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-
+import setContent from '../../utils/setContent';
 import useMarvelService from '../../services/MarvelService';
-import Spinner from '../spiner/spiner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
 
 import './singleComicPage.scss';
-
-// const SingleComicPage = () => {
-//     const [comic, setComic] = useState('');
-//     const {comicId} = useParams();
-//     console.log(useParams());
-
-//     const {error, loading, getComics, clearError} = useMarvelService();
-
-
-//     useEffect(() => {
-//         updateComic();
-//     }, [comicId])
-
-//     const updateComic = () => {
- 
-//         clearError()
-//         getComics(comicId)
-//             .then(onComicLoaded)
-//     }
-
-//     const onComicLoaded = (comic) => {
-//         setComic(comic);
-//     }
-
-//     const spiner = loading ? <Spinner/> : null;
-//     const errorMessage = error ? <ErrorMessage/> : null;
-//     const content = !(loading || error || !comic) ? <View comic={comic}/> : null;
-
-
-//     return (
-//         <>
-//             {errorMessage}
-//             {spiner}
-//             {content}
-//         </>
-        
-//     )
-// }
 
 const SingleComicPage = () => {
     const [data, setData] = useState('');
     const {comicId, charId} = useParams();
 
-    const {error, loading, getComics, getCharacter, clearError} = useMarvelService();
+    const {process, setProcess, getComics, getCharacter, clearError} = useMarvelService();
 
 
     useEffect(() => {
@@ -62,22 +24,17 @@ const SingleComicPage = () => {
         clearError()
         fc()
             .then(onComicLoaded)
+            .then(() => setProcess('comfirmed'))
     }
 
     const onComicLoaded = (data) => {
         setData(data);
     }
 
-    const spiner = loading ? <Spinner/> : null;
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const content = !(loading || error || !data) ? <View link={charId} data={data}/> : null;
-
-
     return (
         <>
-            {errorMessage}
-            {spiner}
-            {content}
+
+            {setContent(process, View, data)}
         </>
         
     )
@@ -85,9 +42,17 @@ const SingleComicPage = () => {
 
 
 const View = ({link, data}) => {
+    const navigation = useNavigate();
+    const goBack = () => navigation(-1)
     const {thumbnail, name, description, pageCount, language, price} = data;
     return (
         <div className="single-comic">
+            <Helmet>
+                <meta
+                    name="description"
+                    content={`Info about ${name}`}/>
+                <title>{name}</title>
+            </Helmet>
             <img src={thumbnail} alt={name} className="single-comic__img"/>
             <div className="single-comic__info">
                 <h2 className="single-comic__name">{name}</h2>
@@ -96,7 +61,7 @@ const View = ({link, data}) => {
                 <p className="single-comic__descr">{language ? `Language: ${language}` : null}</p>
                 <div className="single-comic__price">{price}</div>
             </div>
-            <Link to={link ? '/' : '/comics'} className="single-comic__back">Back to all</Link>
+            <button onClick={() =>  goBack()} className="single-comic__back">Back to all</button>
         </div>
     )
 }

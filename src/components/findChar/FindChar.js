@@ -41,7 +41,8 @@ const FindChar = () => {
                 onChange={onChangeTemp} 
                 placeholder="Find character by name"
                 onClick={handleClick}
-                onBlur={() => setData([])}/>
+                // onBlur={() => setData([])}
+                />
 
             {temp && data?.length === 0 && !loading ? <div className='find__error'>No character found for this query</div> : null}
             {SearchCharList(data)}

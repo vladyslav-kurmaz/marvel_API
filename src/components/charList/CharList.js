@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types'; 
 
+// import setContent from '../../utils/setContent';
 
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spiner/spiner';
@@ -8,17 +9,30 @@ import ErrorMessage from '../errorMessage/ErrorMessage';
 
 import './charList.scss';
 
+const setContent = (process, Component, newItemLoading) => {
+    switch (process) {
+        case 'waiting':
+            return <Spinner/>;
+        case 'loading':
+            return  newItemLoading ? <Component/> : <Spinner/>;
+        case 'comfirmed':
+            return <Component/>;
+        case 'error':
+            return <ErrorMessage/>;
+        default:
+            throw new Error('Unexpected process state')
+    }
+}
+
 const CharList = (props) => {
 
     const [characters, setCharacters] = useState([]);
-    // const [loading, setLoading] = useState(true);
-    // const [error, setError] = useState(false);
     const [newItemLoading, setNewItemLoading] = useState(false);
     const [offset, setOffset] = useState(210);
     const [charEnded, setCharEnded] = useState(false);
 
    
-    const {loading, error, getAllCharacters} = useMarvelService();
+    const {getAllCharacters, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         onRequest(offset, true);
@@ -42,14 +56,9 @@ const CharList = (props) => {
         initial ? setNewItemLoading(false) : setNewItemLoading(true);
         getAllCharacters(offset)
             .then(onCharactersLoaded)
+            .then(() => setProcess('comfirmed'))
 
     }
-
-    // const addNewCharacters = () => {
-    //     onRequest(offset)
-    //     setOffset(offset => offset + 9);
-    // }
-
 
     const charRef = useRef([]);    
 
@@ -92,17 +101,13 @@ const CharList = (props) => {
         )
     }
 
-        const items = renderItems(characters);
-        const spiner = loading && !newItemLoading ? <Spinner/> : null;
-        const errorMessage = error ? <ErrorMessage/> : null;
-        const styled = (loading || error) ? {'display': 'flex', 'justifyContent': 'center'} : null;
+
+        const styled = process === 'wairing' || 'loading' ? {'display': 'flex', 'justifyContent': 'center'} : null;
 
         return (
             <div className="char__list">
                 <ul className="char__grid" style={styled}>
-                    {errorMessage}
-                    {spiner}
-                    {items}
+                    {setContent(process, () => renderItems(characters), newItemLoading)}
 
                 </ul>
                 <button className="button button__main button__long"
